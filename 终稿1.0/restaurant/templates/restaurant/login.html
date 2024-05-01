@@ -1,0 +1,23 @@
+{% load static %}
+<link href="{% static 'css/style.css' %}" rel="stylesheet">
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login Page</title>
+</head>
+<body>
+    <div class="wrapper">
+        <form class="form-signin" method="POST" action="{% url 'login' %}">       
+            <h2 class="form-signin-heading">Please login</h2>
+            {% csrf_token %}
+            {{ form }}
+            <label class="checkbox">
+                <input type="checkbox" value="remember-me" id="rememberMe" name="rememberMe"> Remember me
+            </label>
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
+            <p class="text-center">Don't have an account? <a href="{% url 'register' %}">Register here</a></p> <!-- 添加注册链接 -->
+        </form>
+    </div>
+</body>
+</html>

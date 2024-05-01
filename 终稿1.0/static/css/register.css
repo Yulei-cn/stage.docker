@@ -1,0 +1,59 @@
+.container {
+    width: 100%; /* 初始宽度设置为100%，以适应父容器的大小 */
+    max-width: 600px; /* 最大宽度限制为600px */
+    margin: 0 auto; /* 水平居中显示 */
+    padding: 20px; /* 添加一些内边距 */
+    box-sizing: border-box; /* 确保宽度包含内边距和边框 */
+}
+
+h2 {
+    text-align: center; /* 标题居中 */
+    color: #0d6efd; /* 设置一个鲜明的颜色 */
+}
+
+form {
+    display: flex; /* 使用flex布局 */
+    flex-direction: column; /* 子元素垂直排列 */
+}
+
+form p {
+    margin-top: 1em; /* 表单和文本之间添加额外的空间 */
+    text-align: center; /* 文本居中 */
+}
+
+button {
+    padding: 10px;
+    background-color: #0d6efd;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px; /* 增加按钮的上边距 */
+}
+
+button:hover {
+    background-color: #0a58ca; /* 鼠标悬停时更深的背景色 */
+}
+
+/* 媒体查询用于调整屏幕尺寸不同的显示效果 */
+@media (max-width: 600px) {
+    .container {
+        padding: 10px;
+    }
+
+    h2 {
+        font-size: 1.5em; /* 在小屏幕上减小字体大小 */
+    }
+}
+
+@media (min-width: 601px) and (max-width: 1024px) {
+    .container {
+        width: 80%; /* 平板设备适当增加宽度 */
+    }
+}
+
+@media (min-width: 1025px) {
+    .container {
+        width: 50%; /* 在大屏幕上限制宽度，以保持内容的可读性 */
+    }
+}

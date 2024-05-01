@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Table List</title>
+    <style>
+        body, button, a {  /* 应用到 body、button 和 a 元素 */
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            font-size: 16px;  /* 统一字体大小 */
+        }
+
+        body {
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .button-container {
+            display: flex;
+            width: 100%;  /* 容器宽度占满父元素 */
+        }
+
+        .button-container button {
+            flex: 1;  /* 使所有按钮平均分配空间 */
+            text-align: center;  /* 按钮文本居中 */
+            padding: 10px;  /* 增加一些内边距，使按钮更易点击 */
+            border: none;  /* 可选，移除边框 */
+            background-color: #f8f8f8;  /* 背景颜色，可按需调整 */
+            color: #333;  /* 文本颜色，可按需调整 */
+            outline: none;  /* 移除焦点时的边框 */
+            cursor: pointer;  /* 鼠标悬停时显示指针 */
+        }
+
+        .button-container button:hover {
+            background-color: #e0e0e0;  /* 鼠标悬停时的背景颜色 */
+        }
+
+        .container {
+            width: 100%;  /* 容器宽度为100% */
+            padding: 0 15px;  /* 防止内容直接贴到屏幕边缘 */
+            box-sizing: border-box;  /* 边距和内边距包含在宽度内 */
+        }
+
+        ul {
+            list-style: none;  /* 去除列表符号 */
+            padding: 0;
+            margin: 0;
+        }
+
+        li {
+            padding: 10px;  /* 增加内边距 */
+            border-bottom: 1px solid #ccc;  /* 每项之间用边线分隔 */
+            word-wrap: break-word;  /* 长单词或URL换行 */
+        }
+
+        a {
+            color: blue;  /* 链接颜色 */
+            text-decoration: none;  /* 去掉下划线 */
+            display: inline-block;  /* 确保链接在其容器中正确显示 */
+            width: auto;  /* 链接自动宽度 */
+            overflow-wrap: break-word;  /* URL过长时自动换行 */
+        }
+
+        p {
+            text-align: center;  /* 居中显示文本 */
+            color: #666;  /* 文本颜色 */
+        }
+
+    </style>
+</head>
+<body>
+    <h1>Liste des tables</h1>
+
+    <div class="button-container">
+        <button onclick="addNewTable()">Ajouter une nouvelle table</button>
+        {% if user.is_superuser %}
+        <!-- 只有管理员和超级用户可见此按钮 -->
+        <button onclick="showCustomConfirm()">Vider toutes les commandes</button>
+        {% endif %}
+    </div>
+
+    <!-- 自定义确认弹窗 -->
+    <div id="customConfirm" style="display: none; position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%); border: 1px solid black; background-color: white; padding: 20px; z-index: 100;">
+        <p style="text-align: center; font-weight: bold;">
+            Are you sure you want to clear all orders? This will delete all order data.
+        </p>
+        <p style="text-align: center;">
+            Êtes-vous sûr de vouloir vider toutes les commandes ? Cela supprimera toutes les données des commandes.
+        </p>
+        <p style="text-align: center;">
+            确定要清空所有订单吗？这将删除所有订单的数据。
+        </p>
+        <div style="text-align: center; margin-top: 20px;">
+            <button onclick="clearOrders()">Confirm</button>
+            <button onclick="hideCustomConfirm()">Cancel</button>
+        </div>
+    </div>
+
+    <script>
+        function addNewTable() {
+            fetch('{% url "add_table" %}', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ 'action': 'add' })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.reload(); // 如果添加成功，重新加载页面
+                } else {
+                    alert("添加桌子失败");
+                }
+            });
+        }
+    
+        // JavaScript for adding tables remains unchanged
+
+        function showCustomConfirm() {
+            document.getElementById("customConfirm").style.display = "block";
+        }
+    
+        function hideCustomConfirm() {
+            document.getElementById("customConfirm").style.display = "none";
+        }
+
+        {% if user.is_superuser %}
+        // Only define the function if the user is a superuser
+        function clearOrders() {
+            fetch('{% url "clear_all_orders" %}', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert("所有订单已清空");
+                    window.location.reload(); // 清空成功后，重新加载页面
+                } else {
+                    alert("清空失败");
+                }
+            });
+            hideCustomConfirm();  // 关闭确认弹窗
+        }
+        {% endif %}
+    </script>
+    
+
+    {% if tables %}
+        <div class="container">
+            <ul>
+            {% for table in tables %}
+                <li>
+                    Nº table: {{ table.id }}
+                    {% if table.active %}
+                        <a href="{% url 'add_order_item' %}?table_id={{ table.id }}">Voir la commande:{{table.active}}</a>
+                        <a href="{% url 'checkout_and_reset_table' table.id %}" class="btn btn-primary">  / Tableau de paiement et de réinitialisation</a>
+                    {% else %}
+                        <a href="{% url 'add_order_item' %}?table_id={{ table.id }}">Créer une nouvelle</a>
+                    {% endif %}
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+    {% else %}
+        <div class="container">
+            <p>Il n'y a pas de tables pour le moment, veuillez en ajouter.</p>
+        </div>
+    {% endif %}
+</body>
+</html>
+{% endblock %}
