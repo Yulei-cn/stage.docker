@@ -1,53 +1,6 @@
-asgiref==3.7.2
-astroid==3.0.2
-autopep8==2.0.4
-certifi==2023.11.17
-charset-normalizer==3.3.2
-colorama==0.4.6
-dill==0.3.7
-Django==5.0.2
-docstring-to-markdown==0.13
-flake8==6.1.0
-idna==3.6
-importlib-metadata==7.0.1
-isort==5.13.2
-jedi==0.19.1
-mccabe==0.7.0
-mysql-connector-python==8.2.0
-packaging==23.2
-parso==0.8.3
-pillow==10.2.0
-platformdirs==4.1.0
-pluggy==1.3.0
-protobuf==4.21.12
-psutil==5.9.6
-psycopg2==2.9.9
-pycodestyle==2.11.1
-pydocstyle==6.3.0
-pyflakes==3.1.0
-pylint==3.0.3
-PyQt5==5.15.10
-PyQt5-Qt5==5.15.2
-PyQt5-sip==12.13.0
-PyQt6==6.6.0
-PyQt6-Qt6==6.6.0
-PyQt6-sip==13.6.0
-PyQt6-WebEngine==6.6.0
-PyQt6-WebEngine-Qt6==6.6.0
-PyQtWebEngine==5.15.6
-PyQtWebEngine-Qt5==5.15.2
-python-lsp-jsonrpc==1.1.2
-python-lsp-server==1.9.0
-pytoolconfig==1.2.6
-requests==2.31.0
-rope==1.11.0
-snowballstemmer==2.2.0
-sqlparse==0.4.4
-tomli==2.0.1
-tomlkit==0.12.3
-tzdata==2024.1
-ujson==5.9.0
-urllib3==2.1.0
-whatthepatch==1.0.5
-yapf==0.40.2
-zipp==3.17.0
+Django==3.2  # 或者根据你的需求选择其他版本
+psycopg2-binary==2.8.6  # PostgreSQL 数据库适配器
+djangorestframework==3.12.4  # 如果你需要使用 Django REST Framework
+python-decouple==3.4  # 管理配置和敏感数据
+django-cors-headers==3.7.0  # 如果你的前后端分离，需要处理跨域问题
+gunicorn==20.1.0  # 用于部署到生产环境的 WSGI HTTP 服务器
