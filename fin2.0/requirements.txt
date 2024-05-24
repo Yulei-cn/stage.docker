@@ -1,8 +1,0 @@
-Django==5.0.2
-psycopg2-binary==2.8.6  # PostgreSQL 数据库适配器
-djangorestframework==3.12.4  # 如果你需要使用 Django REST Framework
-python-decouple==3.4  # 管理配置和敏感数据
-django-cors-headers==3.7.0  # 如果你的前后端分离，需要处理跨域问题
-gunicorn==20.1.0  # 用于部署到生产环境的 WSGI HTTP 服务器
-psycopg2-binary==2.8.6
-psycopg-binary==2.8.6
