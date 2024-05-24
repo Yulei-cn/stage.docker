@@ -42,7 +42,7 @@
             <td>{{ order.toddlers }}</td>
             <td>
                 {% for item in order.order_item_set.all %}
-                {{ item.boisson.name }} x {{ item.quantity }}  <button onclick="delete_item('{{item.id}}')">delete</button>  <br>
+                {{ item.boisson.name }} x {{ item.quantity }} </br>
                 {% endfor %}
             </td>
             <td class="total-price">{{ order.prix }}</td>

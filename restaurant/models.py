@@ -24,6 +24,7 @@ class Order(models.Model):
     table = models.ForeignKey(Table, on_delete=models.SET_NULL, related_name='orders', null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    completed_at = models.DateTimeField(null=True, blank=True)  # 添加完成时间
     adults = models.IntegerField(default=0)
     kids = models.IntegerField(default=0)
     toddlers = models.IntegerField(default=0)

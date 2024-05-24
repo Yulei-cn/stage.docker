@@ -1,0 +1,134 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>购物车</title>
+  <style>
+    .basket {
+      border: 2px solid #ccc;
+      padding: 10px;
+      width: 300px;
+    }
+
+    .cart-items {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    .item {
+      border: 1px solid #ccc;
+      padding: 5px;
+      margin: 5px;
+      cursor: move;
+    }
+
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .cart-item button {
+      padding: 5px 10px;
+      margin: 0 5px;
+    }
+
+    .remove-area {
+      border: 2px dashed red;
+      padding: 10px;
+      margin-top: 20px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div id="basket" class="basket">
+    <h2>购物车</h2>
+    <ul id="cart-items" class="cart-items"></ul>
+  </div>
+
+  <div id="items">
+    <div id="item1" class="item" draggable="true" data-name="商品1" data-id="1">商品1</div>
+    <div id="item2" class="item" draggable="true" data-name="商品2" data-id="2">商品2</div>
+    <div id="item3" class="item" draggable="true" data-name="商品3" data-id="3">商品3</div>
+  </div>
+
+  <!-- 引用Webpack打包后的脚本 -->
+  <script src="{% static 'js/dist/bundle.js' %}"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const basket = document.getElementById('basket');
+      const cartItems = document.getElementById('cart-items');
+
+      document.querySelectorAll('.item').forEach(item => {
+        item.addEventListener('dragstart', function(event) {
+          event.dataTransfer.setData('text', event.target.dataset.id);
+          event.dataTransfer.effectAllowed = "move"; // 设置拖动效果为移动
+        });
+      });
+
+      basket.addEventListener('dragover', function(event) {
+        event.preventDefault();
+        event.dataTransfer.dropEffect = "move"; // 设置放置效果为移动
+      });
+
+      basket.addEventListener('drop', function(event) {
+        event.preventDefault();
+        const id = event.dataTransfer.getData('text');
+        const item = document.querySelector(`[data-id="${id}"]`);
+        addToCart(item.dataset.name, item.dataset.id);
+      });
+
+      basket.addEventListener('dragleave', function(event) {
+        // 当拖动的商品离开购物车范围时触发移除
+        const id = event.dataTransfer.getData('text');
+        const item = document.querySelector(`[data-cart-id="${id}"]`); // 确保是购物车中的元素
+        if (item) {
+          removeFromCart(id);
+        }
+      });
+
+      function addToCart(name, id) {
+        let listItem = cartItems.querySelector(`[data-cart-id="${id}"]`);
+        if (!listItem) {
+          listItem = document.createElement('li');
+          listItem.dataset.cartId = id; // 设置标记为购物车中的商品
+          listItem.draggable = true;
+          listItem.addEventListener('dragstart', function(event) {
+            event.dataTransfer.setData('text', id);
+          });
+          listItem.innerHTML = `${name} x <span id="qty-${id}">1</span>
+            <button onclick="changeQuantity('${id}', -1)">-</button>
+            <button onclick="changeQuantity('${id}', 1)">+</button>`;
+          listItem.className = 'cart-item';
+          cartItems.appendChild(listItem);
+        } else {
+          changeQuantity(id, 1);
+        }
+      }
+
+      function removeFromCart(id) {
+        const listItem = cartItems.querySelector(`[data-cart-id="${id}"]`);
+        if (listItem) {
+          cartItems.removeChild(listItem);
+        }
+      }
+
+      window.changeQuantity = function(id, change) {
+        const qtySpan = document.getElementById(`qty-${id}`);
+        let qty = parseInt(qtySpan.textContent);
+        qty += change;
+        if (qty < 1) {
+          removeFromCart(id);
+        } else {
+          qtySpan.textContent = qty;
+        }
+      }
+    });
+
+  </script>
+</body>
+</html>

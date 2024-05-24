@@ -38,7 +38,6 @@
                 margin: 0 auto; /* Center the container */
             }
         
-
             .section {
                 padding: 10px;
                 margin: 10px;
@@ -68,6 +67,7 @@
         .button:hover {
             background-color: #0056b3;
         }
+
         .category-title {
             cursor: pointer;
             color: #007bff;
@@ -78,6 +78,9 @@
             color: #0056b3;
         }
 
+        .form-section {
+            font-size: 1.2em; /* 放大表单部分的字号 */
+        }
 
     </style>
 </head>
@@ -100,15 +103,14 @@
                 <p>You are not logged in.</p>
             {% endif %}
         </div>
-                <!-- Existing content omitted for brevity -->
+
         <div class="section people">
-            <!-- 如果 order 存在且关联到一个用户，显示该用户 -->
             {% if order and order.user %}
                 <p>Order placed by: {{ order.user.username }}</p>
             {% endif %}
             <h3>Nombre de personnes</h3>
-            <!-- Person count and buttons omitted for brevity -->
         </div>
+        
         <div class="people-section">
             <div class="people-group">
                 <h3>Adultes:</h3>
@@ -138,12 +140,7 @@
                 </div>
             </div>
         </div>
-        
-        <div>
-            
-        </div>
 
-        
         {% for category in categories %}
         <div class="section drinks">
             <h3 class="category-title" onclick="toggleSection('{{ category.name }}')">{{ category.name }}</h3>
@@ -163,12 +160,12 @@
         </div>
         {% endfor %}
         
-
-        <div class="section">
+        <div class="section form-section">
             <form method="post" class="horizontal-layout">
                 {% csrf_token %}
                 {{ form }}
                 <button type="submit">提交 Soumettre</button>
+                <button type="button" class="button" onclick="printOrder()">Print</button>
                 <input type="text" class="time-input" id="systemTime" readonly>
             </form>
         </div>
@@ -178,17 +175,18 @@
             document.getElementById("id_kids").value = {{ kids }};
             document.getElementById("id_toddlers").value = {{ toddlers }};
             
-            var quantity_min=0;
-            if("{{ order }}"!='null'){
-                quantity_min=1;
+            var quantity_min = 0;
+            if ("{{ order }}" != 'null') {
+                quantity_min = 1;
             }
-            console.log(quantity_min);
+
             function increment(id) {
                 var display_input = document.getElementById("display_" + id);
                 var input = document.getElementById("id_" + id);
                 display_input.innerText = parseInt(display_input.innerText) + 1;
                 input.value = parseInt(input.value) + 1;
             }
+
             function decrement(id) {
                 var input = document.getElementById("id_" + id);
                 var display_input = document.getElementById("display_" + id);
@@ -196,14 +194,11 @@
                     input.value = parseInt(input.value) - 1;
                     display_input.innerText = parseInt(display_input.innerText) - 1;
 
-                    // 如果数量减少到0，发送删除请求或更新请求
                     if (parseInt(input.value) === 0) {
-                        // 这里可以调用一个函数来处理删除逻辑，例如发送AJAX请求
-                        deleteItem(id);  // 假设这个函数处理删除逻辑
+                        deleteItem(id);
                     }
                 }
             }
-
 
             function toggleSection(categoryName) {
                 var section = document.getElementById('category_' + categoryName);
@@ -221,10 +216,34 @@
                 document.getElementById("systemTime").value = timeString;
             }
 
+            function printOrder() {
+                // Ajax call to print order
+                fetch('{% url "print_order" %}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}',
+                    },
+                    body: JSON.stringify({
+                        'order_id': '{{ order.id }}'
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Order printed successfully!');
+                    } else {
+                        alert('Failed to print order.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Failed to print order.');
+                });
+            }
 
-            setInterval(displayTime, 1000);  /* 更新时间每秒 */
-            displayTime();  /* 初始化显示时间 */
-
+            setInterval(displayTime, 1000);
+            displayTime();
         </script>
     </div>
 </body>

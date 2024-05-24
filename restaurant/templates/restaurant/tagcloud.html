@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tag Cloud Example</title>
+    <!-- 加载静态文件 -->
+    {% load static %}
+    <!-- 引入 TagCloud.min.js -->
+    <script src="{% static 'js/dist/TagCloud.min.js' %}"></script>
+    <style>
+        /* 定义标签云容器的样式 */
+        .tagcloud-container {
+            width: 500px;
+            height: 300px;
+            margin: 0 auto;
+            /* 去掉边框 */
+            border: none;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+    <!-- 创建标签云容器 -->
+    <div class="tagcloud-container"></div>
+
+    <script>
+        // 获取标签云容器
+        const container = document.querySelector('.tagcloud-container');
+        // 标签列表
+        const tags = [
+            "Carola rouge", 
+            "Cafe", "Decafeine", "Cafe rallonge, au lait", "Double expresso", "Cafe creme", "Cappuccino", 
+            "Irish Coffee", "The au jasmin", "The vert", "The a la menthe", "The aux fruits rouges", "Infusions", 
+            "The tilleul", "The verveine", "Mojito", "Pina Colada", "Mai Tai", "Swimming Pool", "Zombie", 
+            "T Sunrise", "Pekin Express", "Sex on the Beach", "Virgin Mojito", "Cocolada", "Magic Amazon", 
+            "Passion Tropic", "Royal Blue", "Sand Island"
+        ];
+        
+        // 初始化标签云
+        const options = {
+            radius: 150,
+            maxSpeed: 'normal',
+            initSpeed: 'normal',
+            direction: 135,
+            keep: true,
+            containerClass: 'tagcloud',
+            itemClass: 'tagcloud--item',
+            useContainerInlineStyles: true,
+            useItemInlineStyles: true
+        };
+
+        TagCloud(container, tags, options);
+    </script>
+</body>
+</html>
+{% endblock %}

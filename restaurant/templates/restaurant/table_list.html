@@ -78,23 +78,23 @@
         <button onclick="addNewTable()">Ajouter une nouvelle table</button>
         {% if user.is_superuser %}
         <!-- 只有管理员和超级用户可见此按钮 -->
-        <button onclick="showCustomConfirm()">Vider toutes les commandes</button>
+        <button onclick="showCustomConfirm()">结账所有订单</button>
         {% endif %}
     </div>
 
     <!-- 自定义确认弹窗 -->
     <div id="customConfirm" style="display: none; position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%); border: 1px solid black; background-color: white; padding: 20px; z-index: 100;">
         <p style="text-align: center; font-weight: bold;">
-            Are you sure you want to clear all orders? This will delete all order data.
+            Are you sure you want to checkout all orders? This will complete all active orders.
         </p>
         <p style="text-align: center;">
-            Êtes-vous sûr de vouloir vider toutes les commandes ? Cela supprimera toutes les données des commandes.
+            Êtes-vous sûr de vouloir clôturer toutes les commandes ? Cela complétera toutes les commandes actives.
         </p>
         <p style="text-align: center;">
-            确定要清空所有订单吗？这将删除所有订单的数据。
+            确定要结账所有订单吗？这将完成所有活跃的订单。
         </p>
         <div style="text-align: center; margin-top: 20px;">
-            <button onclick="clearOrders()">Confirm</button>
+            <button onclick="checkoutAllOrders()">Confirm</button>
             <button onclick="hideCustomConfirm()">Cancel</button>
         </div>
     </div>
@@ -119,8 +119,6 @@
             });
         }
     
-        // JavaScript for adding tables remains unchanged
-
         function showCustomConfirm() {
             document.getElementById("customConfirm").style.display = "block";
         }
@@ -131,8 +129,8 @@
 
         {% if user.is_superuser %}
         // Only define the function if the user is a superuser
-        function clearOrders() {
-            fetch('{% url "clear_all_orders" %}', {
+        function checkoutAllOrders() {
+            fetch('{% url "checkout_all_orders" %}', {
                 method: 'POST',
                 headers: {
                     'X-CSRFToken': '{{ csrf_token }}',
@@ -142,10 +140,10 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    alert("所有订单已清空");
-                    window.location.reload(); // 清空成功后，重新加载页面
+                    alert("所有订单已结账");
+                    window.location.reload(); // 结账成功后，重新加载页面
                 } else {
-                    alert("清空失败");
+                    alert("结账失败");
                 }
             });
             hideCustomConfirm();  // 关闭确认弹窗
@@ -163,6 +161,7 @@
                     {% if table.active %}
                         <a href="{% url 'add_order_item' %}?table_id={{ table.id }}">Voir la commande:{{table.active}}</a>
                         <a href="{% url 'checkout_and_reset_table' table.id %}" class="btn btn-primary">  / Tableau de paiement et de réinitialisation</a>
+                        <button onclick="location.href='{% url 'quick_add_coffee' table.id %}'">Ajouter Café</button>
                     {% else %}
                         <a href="{% url 'add_order_item' %}?table_id={{ table.id }}">Créer une nouvelle</a>
                     {% endif %}

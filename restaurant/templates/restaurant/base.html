@@ -57,7 +57,11 @@
                 <li><a href="/">Home</a></li>
                 <li><a href="{% url 'table_list' %}">Tables</a></li>
                 <li><a href="{% url 'cashier_summary' %}">Orders</a></li>
-                <!-- 其他链接 -->
+                <li><a href="{% url 'tag_cloud' %}">Tag Cloud</a></li>
+                <li><a href="{% url 'test' %}">Test</a></li>
+                {% if user.is_authenticated and user.is_superuser %}
+                    <li><a href="{% url 'sales-overview' %}">Analytics</a></li>
+                {% endif %}
                 <li>
                     <form action="{% url 'logout' %}" method="post">
                         {% csrf_token %}

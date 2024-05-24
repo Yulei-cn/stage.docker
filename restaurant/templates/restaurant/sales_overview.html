@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% block content %}
+{% if user.is_superuser %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/sales.css' %}">
+    <div class="container">
+        <h1>Bonjour Restaurant Alacigogne</h1>
+        <p class="subtitle">Aperçu des ventes</p>
+        <p class="description">Une vue d'ensemble de vos ventes comprenant votre nombre total de commandes, votre temps moyen de préparation et votre chiffre d'affaires</p>
+        
+        <div class="overview">
+            <div class="overview-item">
+                <h2>Commandes acceptées</h2>
+                <p>{{ accepted_orders }}</p>
+                <span class="percentage {% if accepted_orders_change >= 0 %}positive{% else %}negative{% endif %}">
+                    {% if accepted_orders_change >= 0 %}↑{% else %}↓{% endif %} {{ accepted_orders_change|floatformat:2 }}%
+                </span>
+            </div>
+            <div class="overview-item">
+                <h2>Temps de préparation</h2>
+                <p>{{ average_prep_time }}</p>
+                <span class="percentage {% if average_prep_time_change >= 0 %}positive{% else %}negative{% endif %}">
+                    {% if average_prep_time_change >= 0 %}↑{% else %}↓{% endif %} {{ average_prep_time_change|floatformat:2 }}%
+                </span>
+            </div>
+            <div class="overview-item">
+                <h2>Chiffre d'affaires</h2>
+                <p>€{{ revenue|floatformat:2 }}</p>
+                <span class="percentage {% if revenue_change >= 0 %}positive{% else %}negative{% endif %}">
+                    {% if revenue_change >= 0 %}↑{% else %}↓{% endif %} {{ revenue_change|floatformat:2 }}%
+                </span>
+            </div>
+        </div>
+        
+        <div class="chart-container">
+            <h3>Commandes terminées</h3>
+            <canvas id="ordersChart" width="400" height="150"></canvas>
+        </div>
+        
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+            var ctx = document.getElementById('ordersChart').getContext('2d');
+            var ordersChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: JSON.parse('{{ dates|escapejs }}'),
+                    datasets: [{
+                        label: 'Commandes terminées',
+                        data: JSON.parse('{{ counts|escapejs }}'),
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        </script>
+    </div>
+{% else %}
+    <p>Vous n'avez pas l'autorisation de voir cette page.</p>
+{% endif %}
+{% endblock %}
