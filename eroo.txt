@@ -5,3 +5,5 @@ Username [postgres]:
 用户 postgres 的口令：zhu
 
 "C:\Users\zhu\Downloads\stage.docker-main\restaurant-backup.sql"
+
+psql -U postgres -d postgres -h localhost -p 5433 -f C:\Users\zhu\Downloads\stage.docker-main\restaurant-backup.sql
