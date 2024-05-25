@@ -1,2 +1,5 @@
-DROP TABLE IF EXISTS restaurant_category CASCADE;
-python manage.py migrate restaurant
+Server [localhost]:
+Database [postgres]:
+Port [5433]:
+Username [postgres]:
+用户 postgres 的口令：zhu
