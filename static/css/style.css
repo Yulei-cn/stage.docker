@@ -1,0 +1,93 @@
+body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.wrapper {
+    box-sizing: border-box;
+    padding: 15px;
+    border: 1px solid #ccc; /* 可视化边框帮助调试 */
+}
+
+.form-signin {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 4px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+}
+
+.form-signin-heading, .checkbox label, .form-signin button, .form-signin input[type="text"], .form-signin input[type="password"] {
+    font-size: 16px;
+}
+
+.form-signin-heading {
+    color: #0d6efd;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.form-signin button, .form-signin input[type="text"], .form-signin input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.form-signin button {
+    color: white;
+    background-color: #0d6efd;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+.form-signin button:hover {
+    background-color: #0a58ca;
+}
+
+.checkbox {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.checkbox input[type="checkbox"] {
+    margin-right: 5px;
+}
+
+@media (max-width: 600px) {
+    .form-signin, .wrapper {
+        width: 95%;
+        padding: 5px;
+    }
+
+    .form-signin-heading, .checkbox label, .form-signin button, .form-signin input[type="text"], .form-signin input[type="password"] {
+        font-size: 12px;
+    }
+}
+
+@media (min-width: 601px) and (max-width: 1024px) {
+    .wrapper {
+        width: 75%;
+    }
+
+    .form-signin-heading {
+        font-size: 18px;
+    }
+}
+
+@media (min-width: 1025px) {
+    .wrapper {
+        width: 50%;
+    }
+
+    .form-signin-heading {
+        font-size: 20px;
+    }
+}

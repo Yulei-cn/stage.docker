@@ -1,0 +1,364 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>购物车</title>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      margin: 0;
+      font-family: Arial, sans-serif;
+      user-select: none; /* 禁用选择文本 */
+    }
+    
+    .content {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .section {
+      padding: 10px;
+      overflow-y: auto;
+      scrollbar-width: thin; /* Firefox */
+      scrollbar-color: #888 #f1f1f1; /* Firefox */
+    }
+
+    .section::-webkit-scrollbar {
+      width: 20px; /* Chrome, Safari 和 Opera */
+    }
+
+    .section::-webkit-scrollbar-track {
+      background: #f1f1f1; /* 滚动条轨道 */
+      margin-right: 5px; /* 与右侧的间距 */
+    }
+
+    .section::-webkit-scrollbar-thumb {
+      background-color: #888; /* 滚动条颜色 */
+      border-radius: 10px; /* 圆角 */
+      border: 10px solid #f1f1f1; /* 间距和轨道颜色 */
+    }
+
+    .drinks-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .item {
+      cursor: move;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: calc(33.333% - 20px); /* 3 items per row with 10px gap */
+      padding: 0;
+      transition: box-shadow 0.3s, background-color 0.3s;
+    }
+
+    .item-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      cursor: move;
+    }
+
+    .item img {
+      width: 100%;
+      height: auto;
+      margin-bottom: 10px;
+      object-fit: cover;
+    }
+
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .cart-item button {
+      padding: 5px 10px;
+      margin: 0 5px;
+    }
+
+    .basket-wrapper {
+      padding: 10px;
+      background: #f9f9f9;
+      border-top: 1px solid #ccc;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .cart-total {
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    @media (max-width: 768px) {
+      .item {
+        width: calc(33.333% - 20px); /* 3 items per row with 10px gap */
+      }
+    }
+
+    @media (max-width: 480px) {
+      .item {
+        width: calc(33.333% - 20px); /* 3 items per row with 10px gap */
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="content">
+    <div class="section">
+      <h2>酒水</h2>
+      <div class="drinks-grid">
+        <div id="item1" class="item" draggable="true" data-name="Virgin Mojito" data-id="1" data-price="5.50">
+          <div class="item-content">
+            <img src="{% static 'images/drinks/virgin_mojito.jpg' %}" alt="Virgin Mojito">
+            <span>Virgin Mojito - €5.50</span>
+          </div>
+        </div>
+        <div id="item2" class="item" draggable="true" data-name="Cocolada" data-id="2" data-price="5.50">
+          <div class="item-content">
+            <img src="{% static 'images/drinks/cocolada.jpg' %}" alt="Cocolada">
+            <span>Cocolada - €5.50</span>
+          </div>
+        </div>
+        <div id="item3" class="item" draggable="true" data-name="Magic Amazon" data-id="3" data-price="5.50">
+          <div class="item-content">
+            <img src="{% static 'images/drinks/magic_amazon.jpg' %}" alt="Magic Amazon">
+            <span>Magic Amazon - €5.50</span>
+          </div>
+        </div>
+        <div id="item4" class="item" draggable="true" data-name="Passion Tropic" data-id="4" data-price="5.50">
+          <div class="item-content">
+            <img src="{% static 'images/drinks/passion_tropic.jpg' %}" alt="Passion Tropic">
+            <span>Passion Tropic - €5.50</span>
+          </div>
+        </div>
+        <div id="item5" class="item" draggable="true" data-name="Mojito" data-id="5" data-price="6.50">
+          <div class="item-content">
+            <img src="{% static 'images/drinks/mojito.jpg' %}" alt="Mojito">
+            <span>Mojito - €6.50</span>
+          </div>
+        </div>
+        <div id="item6" class="item" draggable="true" data-name="Pina Colada" data-id="6" data-price="6.50">
+          <div class="item-content">
+            <img src="{% static 'images/drinks/pina_colada.jpg' %}" alt="Pina Colada">
+            <span>Pina Colada - €6.50</span>
+          </div>
+        </div>
+        <div id="item7" class="item" draggable="true" data-name="Mai Tai" data-id="7" data-price="6.50">
+          <div class="item-content">
+            <img src="{% static 'images/drinks/mai_tai.jpg' %}" alt="Mai Tai">
+            <span>Mai Tai - €6.50</span>
+          </div>
+        </div>
+        <div id="item8" class="item" draggable="true" data-name="Swimming Pool" data-id="8" data-price="6.50">
+          <div class="item-content">
+            <img src="{% static 'images/drinks/swimming_pool.jpg' %}" alt="Swimming Pool">
+            <span>Swimming Pool - €6.50</span>
+          </div>
+        </div>
+        <div id="item9" class="item" draggable="true" data-name="Zombie" data-id="9" data-price="6.50">
+          <div class="item-content">
+            <img src="{% static 'images/drinks/zombie.jpg' %}" alt="Zombie">
+            <span>Zombie - €6.50</span>
+          </div>
+        </div>
+        <div id="item10" class="item" draggable="true" data-name="T Sunrise" data-id="10" data-price="6.50">
+          <div class="item-content">
+            <img src="{% static 'images/drinks/t_sunrise.jpg' %}" alt="T Sunrise">
+            <span>T Sunrise - €6.50</span>
+          </div>
+        </div>
+        <div id="item11" class="item" draggable="true" data-name="Pekin Express" data-id="11" data-price="6.50">
+          <div class="item-content">
+            <img src="{% static 'images/drinks/pekin_express.jpg' %}" alt="Pekin Express">
+            <span>Pekin Express - €6.50</span>
+          </div>
+        </div>
+        <div id="item12" class="item" draggable="true" data-name="Sex on the Beach" data-id="12" data-price="6.50">
+          <div class="item-content">
+            <img src="{% static 'images/drinks/sex_on_the_beach.jpg' %}" alt="Sex on the Beach">
+            <span>Sex on the Beach - €6.50</span>
+          </div>
+        </div>
+        <div id="item13" class="item" draggable="true" data-name="Royal Blue" data-id="13" data-price="5.50">
+          <div class="item-content">
+            <img src="{% static 'images/drinks/royal_blue.jpg' %}" alt="Royal Blue">
+            <span>Royal Blue - €5.50</span>
+          </div>
+        </div>
+        <div id="item14" class="item" draggable="true" data-name="Sand Island" data-id="14" data-price="5.50">
+          <div class="item-content">
+            <img src="{% static 'images/drinks/sand_island.jpg' %}" alt="Sand Island">
+            <span>Sand Island - €5.50</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="section">
+      <h2>菜单</h2>
+      <!-- 菜单内容在这里 -->
+    </div>
+  </div>
+
+  <div class="basket-wrapper">
+    <div id="basket" class="basket">
+      <h2>购物车</h2>
+      <ul id="cart-items" class="cart-items"></ul>
+      <div id="cart-total" class="cart-total">总价: €0.00</div>
+    </div>
+  </div>
+
+  <!-- 引用Webpack打包后的脚本 -->
+  <script src="{% static 'js/dist/bundle.js' %}"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const basket = document.getElementById('basket');
+      const cartItems = document.getElementById('cart-items');
+      const cartTotal = document.getElementById('cart-total');
+
+      // 添加触摸事件处理程序
+      document.querySelectorAll('.item').forEach(item => {
+        item.addEventListener('touchstart', handleTouchStart, false);
+        item.addEventListener('touchmove', handleTouchMove, false);
+        item.addEventListener('touchend', handleTouchEnd, false);
+        item.addEventListener('dragstart', handleDragStart, false);
+      });
+
+      basket.addEventListener('dragover', function(event) {
+        event.preventDefault();
+        event.dataTransfer.dropEffect = "move"; // 设置放置效果为移动
+      });
+
+      basket.addEventListener('drop', function(event) {
+        event.preventDefault();
+        const id = event.dataTransfer.getData('text');
+        const item = document.querySelector(`[data-id="${id}"]`);
+        addToCart(item.dataset.name, item.dataset.id, item.dataset.price);
+      });
+
+      function handleTouchStart(event) {
+        const touch = event.touches[0];
+        const item = event.currentTarget;
+
+        // 记录触摸初始位置
+        item.touchStartX = touch.clientX;
+        item.touchStartY = touch.clientY;
+
+        // 记录元素初始位置
+        item.startX = item.getBoundingClientRect().left;
+        item.startY = item.getBoundingClientRect().top;
+
+        // 设置元素的绝对定位
+        item.style.position = 'absolute';
+        item.style.zIndex = 1000;
+
+        // 增加视觉反馈
+        item.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
+        item.style.backgroundColor = '#f0f0f0';
+      }
+
+      function handleTouchMove(event) {
+        event.preventDefault(); // 阻止默认滚动行为
+        const touch = event.touches[0];
+        const item = event.currentTarget;
+
+        // 计算移动的距离
+        const deltaX = touch.clientX - item.touchStartX;
+        const deltaY = touch.clientY - item.touchStartY;
+
+        // 更新元素位置
+        item.style.left = `${item.startX + deltaX}px`;
+        item.style.top = `${item.startY + deltaY}px`;
+      }
+
+      function handleTouchEnd(event) {
+        const item = event.currentTarget;
+        const basketRect = basket.getBoundingClientRect();
+        const itemRect = item.getBoundingClientRect();
+
+        // 检查元素是否在购物车区域内
+        if (itemRect.right > basketRect.left &&
+            itemRect.left < basketRect.right &&
+            itemRect.bottom > basketRect.top &&
+            itemRect.top < basketRect.bottom) {
+          addToCart(item.dataset.name, item.dataset.id, item.dataset.price);
+        }
+
+        // 重置元素位置和样式
+        item.style.position = '';
+        item.style.zIndex = '';
+        item.style.left = '';
+        item.style.top = '';
+        item.style.boxShadow = '';
+        item.style.backgroundColor = '';
+      }
+
+      function handleDragStart(event) {
+        event.dataTransfer.setData('text', event.target.dataset.id);
+        event.dataTransfer.effectAllowed = "move"; // 设置拖动效果为移动
+      }
+
+      function addToCart(name, id, price) {
+        let listItem = cartItems.querySelector(`[data-cart-id="${id}"]`);
+        if (!listItem) {
+          listItem = document.createElement('li');
+          listItem.dataset.cartId = id; // 设置标记为购物车中的商品
+          listItem.draggable = true;
+          listItem.addEventListener('dragstart', function(event) {
+            event.dataTransfer.setData('text', id);
+          });
+          listItem.innerHTML = `${name} - €${price} x <span id="qty-${id}">1</span>
+            <button onclick="changeQuantity('${id}', -1)">-</button>
+            <button onclick="changeQuantity('${id}', 1)">+</button>`;
+          listItem.className = 'cart-item';
+          cartItems.appendChild(listItem);
+        } else {
+          changeQuantity(id, 1);
+        }
+        updateCartTotal();
+      }
+
+      function removeFromCart(id) {
+        const listItem = cartItems.querySelector(`[data-cart-id="${id}"]`);
+        if (listItem) {
+          cartItems.removeChild(listItem);
+        }
+        updateCartTotal();
+      }
+
+      window.changeQuantity = function(id, change) {
+        const qtySpan = document.getElementById(`qty-${id}`);
+        let qty = parseInt(qtySpan.textContent);
+        qty += change;
+        if (qty < 1) {
+          removeFromCart(id);
+        } else {
+          qtySpan.textContent = qty;
+        }
+        updateCartTotal();
+      }
+
+      function updateCartTotal() {
+        let total = 0;
+        cartItems.querySelectorAll('.cart-item').forEach(item => {
+          const id = item.dataset.cartId;
+          const qty = parseInt(document.getElementById(`qty-${id}`).textContent);
+          const price = parseFloat(item.innerHTML.match(/€(\d+\.\d+)/)[1]);
+          total += qty * price;
+        });
+        cartTotal.textContent = `总价: €${total.toFixed(2)}`;
+      }
+    });
+  </script>
+</body>
+</html>

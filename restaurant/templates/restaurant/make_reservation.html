@@ -1,0 +1,229 @@
+{% load i18n %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="{{ user_language }}">
+<head>
+    <meta charset="UTF-8">
+    <title>{% trans "预定桌子" %}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-image: url("{% static 'images/reservation.jpeg' %}");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        .language-switcher-container {
+            display: flex;
+            justify-content: center;
+            width: 80%;
+            max-width: 800px;
+            margin-bottom: 20px;
+        }
+
+        .language-switcher {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            max-width: 800px;
+        }
+
+        .language-switcher li {
+            margin: 0 10px;
+            flex: 1;
+        }
+
+        .language-switcher img {
+            width: 100%;
+            height: auto;
+            transition: transform 0.3s;
+        }
+
+        .language-switcher img:hover {
+            transform: scale(1.2);
+        }
+        .container ul {
+            list-style: none;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding: 0;
+            width: 100%;
+            max-width: 600px;
+        }
+        .container li {
+            width: 100%;
+            display: inline-block;
+            margin: 5px auto;
+            text-align: left;
+            position: relative;
+            overflow: hidden;
+        }
+        .container li img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+            object-position: center;
+            position: relative;
+            z-index: 10;
+            transition: transform 0.35s;
+        }
+        .container li .text {
+            width: 100%;
+            height: 100%;
+            background-color: #2c3f52;
+            color: #b7ccde;
+            position: absolute;
+            left: 0;
+            top: 0;
+            padding: 20px;
+            transform: scale(0.7);
+            opacity: 0;
+            transition: 0.35s;
+        }
+        .container li h3 {
+            color: #fff;
+        }
+        .container li a {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background-color: #2b80ae;
+            color: #fff;
+            text-decoration: none;
+            padding: 5px 10px;
+            border-radius: 2px;
+        }
+        .container li:hover img {
+            transform: scale(0.45);
+            border-radius: 50%;
+            border: 15px solid rgba(255, 255, 255, 0.25);
+        }
+        .container li:hover .text {
+            transform: scale(1);
+            opacity: 1;
+        }
+        .form-container {
+            text-align: center;
+            width: 100%;
+            max-width: 750px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .form-container h2 {
+            margin-bottom: 20px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        button {
+            padding: 10px;
+            background-color: #2b80ae;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #1a5d7f;
+        }
+    </style>
+</head>
+<body>
+    <div class="language-switcher-container">
+        <ul class="language-switcher">
+            <li><a href="{% url 'make_reservation' %}?lang=zh-hans"><img src="{% static 'images/flags/zh-hans.png' %}" alt="简体中文"></a></li>
+            <li><a href="{% url 'make_reservation' %}?lang=zh-hant"><img src="{% static 'images/flags/zh-hant.png' %}" alt="繁体中文"></a></li>
+            <li><a href="{% url 'make_reservation' %}?lang=fr"><img src="{% static 'images/flags/fr.png' %}" alt="法语"></a></li>
+            <li><a href="{% url 'make_reservation' %}?lang=vi"><img src="{% static 'images/flags/vi.png' %}" alt="越南语"></a></li>
+            <li><a href="{% url 'make_reservation' %}?lang=th"><img src="{% static 'images/flags/th.png' %}" alt="泰语"></a></li>
+            <li><a href="{% url 'make_reservation' %}?lang=es"><img src="{% static 'images/flags/es.png' %}" alt="西班牙语"></a></li>
+            <li><a href="{% url 'make_reservation' %}?lang=en"><img src="{% static 'images/flags/en.png' %}" alt="英语"></a></li>
+        </ul>
+    </div>
+
+    {% if not request.GET.reservation_type %}
+        <div class="container">
+            <ul>
+                <li>
+                    <img src="{% static 'images/personel.png' %}" alt="{% trans '个人预定' %}">
+                    <div class="text">
+                        <h3>{% trans '个人预定' %}</h3>
+                        <a href="?reservation_type=personal&lang={{ user_language }}">{% trans '选择' %}</a>
+                    </div>
+                </li>
+                <li>
+                    <img src="{% static 'images/group.png' %}" alt="{% trans '团体预定' %}">
+                    <div class="text">
+                        <h3>{% trans '团体预定' %}</h3>
+                        <a href="?reservation_type=group&lang={{ user_language }}">{% trans '选择' %}</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    {% else %}
+        <div class="form-container">
+            <h2>{% trans "预定桌子" %}</h2>
+            <form method="post">
+                {% csrf_token %}
+                {% if request.GET.reservation_type == "group" %}
+                    <div>
+                        <label for="company_name">{% trans "公司名称" %}</label>
+                        <input type="text" id="company_name" name="company_name" required>
+                    </div>
+                    <div>
+                        <label for="email">{% trans "邮箱" %}</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div>
+                        <label for="number_of_people">{% trans "人数" %}</label>
+                        <input type="number" id="number_of_people" name="number_of_people" required>
+                    </div>
+                    <div>
+                        <label for="group_type">{% trans "团体餐还是自助" %}</label>
+                        <select id="group_type" name="group_type" required>
+                            <option value="group_dinner">{% trans "团体餐" %}</option>
+                            <option value="buffet">{% trans "自助" %}</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="reservation_time">{% trans "时间" %}</label>
+                        <input type="datetime-local" id="reservation_time" name="reservation_time" required>
+                    </div>
+                    <div>
+                        <h3>{% trans "餐厅信息" %}</h3>
+                        <p>SAS XIN CHANG LONG</p>
+                        <p>Restaurant À LA CIGOGNE</p>
+                        <p>156 Rue du Ladhof - 68000 COLMAR</p>
+                        <p>Tél : 03 89 20 28 28</p>
+                        <p>alacigognecolmar@gmail.com</p>
+                    </div>
+                {% else %}
+                    {{ form.as_p }}
+                {% endif %}
+                <button type="submit">{% trans "预定" %}</button>
+            </form>
+        </div>
+    {% endif %}
+</body>
+</html>

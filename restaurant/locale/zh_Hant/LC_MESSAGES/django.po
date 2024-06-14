@@ -1,0 +1,103 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-06-04 23:08+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: zh-hant\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgid "预定日期"
+msgstr "預定日期"
+
+msgid "预定时间"
+msgstr "預定時間"
+
+msgid "预定类型"
+msgstr "預定類型"
+
+msgid "姓名"
+msgstr "姓名"
+
+msgid "电话"
+msgstr "電話"
+
+msgid "桌子"
+msgstr "桌子"
+
+msgid "人数"
+msgstr "人數"
+
+msgid "公司名称"
+msgstr "公司名稱"
+
+msgid "邮箱"
+msgstr "郵箱"
+
+msgid "团体餐"
+msgstr "團體餐"
+
+msgid "自助"
+msgstr "自助"
+
+msgid "团体餐还是自助"
+msgstr "團體餐還是自助"
+
+msgid "Username"
+msgstr "用戶名"
+
+msgid "Password"
+msgstr "密碼"
+
+msgid "Password confirmation"
+msgstr "密碼確認"
+
+msgid "ID to delete"
+msgstr "刪除的ID"
+
+msgid "Adults"
+msgstr "成年人"
+
+msgid "Kids"
+msgstr "孩子"
+
+msgid "Toddlers"
+msgstr "幼兒"
+
+msgid "个人"
+msgstr "個人"
+
+msgid "团体"
+msgstr "團體"
+
+msgid "预定桌子"
+msgstr "預定桌子"
+
+msgid "个人预定"
+msgstr "個人預定"
+
+msgid "选择"
+msgstr "選擇"
+
+msgid "团体预定"
+msgstr "團體預定"
+
+msgid "时间"
+msgstr "時間"
+
+msgid "餐厅信息"
+msgstr "餐廳信息"
+
+msgid "预定"
+msgstr "預定"
+
+msgid "预定成功！"
+msgstr "預定成功！"
+
+msgid "请填写所有必填字段。"
+msgstr "請填寫所有必填字段。"

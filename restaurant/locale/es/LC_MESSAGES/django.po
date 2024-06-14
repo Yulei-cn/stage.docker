@@ -1,0 +1,103 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-06-04 23:08+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "预定日期"
+msgstr "Fecha de reserva"
+
+msgid "预定时间"
+msgstr "Hora de reserva"
+
+msgid "预定类型"
+msgstr "Tipo de reserva"
+
+msgid "姓名"
+msgstr "Nombre"
+
+msgid "电话"
+msgstr "Teléfono"
+
+msgid "桌子"
+msgstr "Mesa"
+
+msgid "人数"
+msgstr "Número de personas"
+
+msgid "公司名称"
+msgstr "Nombre de la empresa"
+
+msgid "邮箱"
+msgstr "Correo electrónico"
+
+msgid "团体餐"
+msgstr "Comida de grupo"
+
+msgid "自助"
+msgstr "Buffet"
+
+msgid "团体餐还是自助"
+msgstr "Comida de grupo o buffet"
+
+msgid "Username"
+msgstr "Nombre de usuario"
+
+msgid "Password"
+msgstr "Contraseña"
+
+msgid "Password confirmation"
+msgstr "Confirmación de contraseña"
+
+msgid "ID to delete"
+msgstr "ID para eliminar"
+
+msgid "Adults"
+msgstr "Adultos"
+
+msgid "Kids"
+msgstr "Niños"
+
+msgid "Toddlers"
+msgstr "Bebés"
+
+msgid "个人"
+msgstr "Personal"
+
+msgid "团体"
+msgstr "Grupo"
+
+msgid "预定桌子"
+msgstr "Reservar una mesa"
+
+msgid "个人预定"
+msgstr "Reserva individual"
+
+msgid "选择"
+msgstr "Seleccionar"
+
+msgid "团体预定"
+msgstr "Reserva de grupo"
+
+msgid "时间"
+msgstr "Hora"
+
+msgid "餐厅信息"
+msgstr "Información del restaurante"
+
+msgid "预定"
+msgstr "Reservar"
+
+msgid "预定成功！"
+msgstr "¡Reserva exitosa!"
+
+msgid "请填写所有必填字段。"
+msgstr "Por favor complete todos los campos obligatorios."

@@ -1,0 +1,164 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-06-04 23:08+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: .\restaurant\forms.py:12
+msgid "预定日期"
+msgstr "Date de réservation"
+
+#: .\restaurant\forms.py:17 .\restaurant\forms.py:38 .\restaurant\forms.py:48
+msgid "预定时间"
+msgstr "Heure de réservation"
+
+#: .\restaurant\forms.py:22
+msgid "预定类型"
+msgstr "Type de réservation"
+
+#: .\restaurant\forms.py:24
+msgid "姓名"
+msgstr "Nom"
+
+#: .\restaurant\forms.py:25
+msgid "电话"
+msgstr "Téléphone"
+
+#: .\restaurant\forms.py:26
+msgid "桌子"
+msgstr "Table"
+
+#: .\restaurant\forms.py:27 .\restaurant\forms.py:36 .\restaurant\forms.py:46
+#: .\restaurant\templates\restaurant\make_reservation.html:199
+msgid "人数"
+msgstr "Nombre de personnes"
+
+#: .\restaurant\forms.py:34 .\restaurant\forms.py:44
+#: .\restaurant\templates\restaurant\make_reservation.html:191
+msgid "公司名称"
+msgstr "Nom de la société"
+
+#: .\restaurant\forms.py:35 .\restaurant\forms.py:45
+#: .\restaurant\templates\restaurant\make_reservation.html:195
+msgid "邮箱"
+msgstr "Email"
+
+#: .\restaurant\forms.py:37
+#: .\restaurant\templates\restaurant\make_reservation.html:205
+msgid "团体餐"
+msgstr "Repas de groupe"
+
+#: .\restaurant\forms.py:37
+#: .\restaurant\templates\restaurant\make_reservation.html:206
+msgid "自助"
+msgstr "Buffet"
+
+#: .\restaurant\forms.py:37 .\restaurant\forms.py:47
+#: .\restaurant\templates\restaurant\make_reservation.html:203
+msgid "团体餐还是自助"
+msgstr "Repas de groupe ou buffet"
+
+#: .\restaurant\forms.py:57 .\restaurant\forms.py:87
+msgid "Username"
+msgstr "Nom d'utilisateur"
+
+#: .\restaurant\forms.py:58 .\restaurant\forms.py:88
+msgid "Password"
+msgstr "Mot de passe"
+
+#: .\restaurant\forms.py:59
+msgid "Password confirmation"
+msgstr "Confirmation du mot de passe"
+
+#: .\restaurant\forms.py:64
+msgid "ID to delete"
+msgstr "ID à supprimer"
+
+#: .\restaurant\forms.py:69
+msgid "Adults"
+msgstr "Adultes"
+
+#: .\restaurant\forms.py:70
+msgid "Kids"
+msgstr "Enfants"
+
+#: .\restaurant\forms.py:71
+msgid "Toddlers"
+msgstr "Tout-petits"
+
+#: .\restaurant\models.py:10
+msgid "个人"
+msgstr "Individuel"
+
+#: .\restaurant\models.py:11
+msgid "团体"
+msgstr "Groupe"
+
+#: .\restaurant\templates\restaurant\make_reservation.html:7
+#: .\restaurant\templates\restaurant\make_reservation.html:186
+msgid "预定桌子"
+msgstr "Réserver une table"
+
+#: .\restaurant\templates\restaurant\make_reservation.html:169
+#: .\restaurant\templates\restaurant\make_reservation.html:171
+msgid "个人预定"
+msgstr "Réservation individuelle"
+
+#: .\restaurant\templates\restaurant\make_reservation.html:172
+#: .\restaurant\templates\restaurant\make_reservation.html:179
+msgid "选择"
+msgstr "Choisir"
+
+#: .\restaurant\templates\restaurant\make_reservation.html:176
+#: .\restaurant\templates\restaurant\make_reservation.html:178
+msgid "团体预定"
+msgstr "Réservation de groupe"
+
+#: .\restaurant\templates\restaurant\make_reservation.html:210
+msgid "时间"
+msgstr "Heure"
+
+#: .\restaurant\templates\restaurant\make_reservation.html:214
+msgid "餐厅信息"
+msgstr "Informations sur le restaurant"
+
+#: .\restaurant\templates\restaurant\make_reservation.html:224
+msgid "预定"
+msgstr "Réserver"
+
+#: .\restaurant\views.py:73
+msgid "预定成功！"
+msgstr "Réservation réussie !"
+
+#: .\restaurant\views.py:76
+msgid "请填写所有必填字段。"
+msgstr "Veuillez remplir tous les champs obligatoires."
+
+#~ msgid "Reservation date"
+#~ msgstr "Date de réservation"
+
+#~ msgid "Reservation time"
+#~ msgstr "Heure de réservation"
+
+#~ msgid "Table"
+#~ msgstr "Table"
+
+#~ msgid "Guests"
+#~ msgstr "Invités"
+
+#~ msgid "个人预定需要填写姓名和电话"
+#~ msgstr "Les réservations individuelles nécessitent un nom et un téléphone"

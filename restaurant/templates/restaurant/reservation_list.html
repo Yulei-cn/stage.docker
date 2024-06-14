@@ -1,0 +1,55 @@
+<!-- templates/restaurant/reservation_list.html -->
+{% extends "restaurant/base.html" %}
+
+{% block content %}
+<h2>我的预定 / Mes réservations</h2>
+<table class="reservation-table">
+    <thead>
+        <tr>
+            <th>桌子编号 / Numéro de table</th>
+            <th>预定日期 / Date de réservation</th>
+            <th>预定时间 / Heure de réservation</th>
+            <th>人数 / Nombre de personnes</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for reservation in reservations %}
+        <tr>
+            <td>{{ reservation.table.name }}</td>
+            <td>{{ reservation.reservation_date|date:"Y年m月d日" }}</td>
+            <td>{{ reservation.reservation_time|time:"H:i" }}</td>
+            <td>{{ reservation.guests }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4">暂无预定 / Pas de réservation</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+
+<style>
+    .reservation-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        table-layout: fixed;
+    }
+    .reservation-table th, .reservation-table td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: center;
+        word-wrap: break-word;
+    }
+    .reservation-table th {
+        background-color: #f2f2f2;
+        font-weight: bold;
+    }
+    .reservation-table tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+    .reservation-table tr:hover {
+        background-color: #ddd;
+    }
+</style>

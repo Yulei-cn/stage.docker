@@ -1,0 +1,103 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-06-04 23:08+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: vi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgid "预定日期"
+msgstr "Ngày đặt trước"
+
+msgid "预定时间"
+msgstr "Thời gian đặt trước"
+
+msgid "预定类型"
+msgstr "Loại đặt chỗ"
+
+msgid "姓名"
+msgstr "Tên"
+
+msgid "电话"
+msgstr "Điện thoại"
+
+msgid "桌子"
+msgstr "Bàn"
+
+msgid "人数"
+msgstr "Số người"
+
+msgid "公司名称"
+msgstr "Tên công ty"
+
+msgid "邮箱"
+msgstr "Email"
+
+msgid "团体餐"
+msgstr "Bữa ăn nhóm"
+
+msgid "自助"
+msgstr "Tự chọn"
+
+msgid "团体餐还是自助"
+msgstr "Bữa ăn nhóm hay tự chọn"
+
+msgid "Username"
+msgstr "Tên người dùng"
+
+msgid "Password"
+msgstr "Mật khẩu"
+
+msgid "Password confirmation"
+msgstr "Xác nhận mật khẩu"
+
+msgid "ID to delete"
+msgstr "ID cần xóa"
+
+msgid "Adults"
+msgstr "Người lớn"
+
+msgid "Kids"
+msgstr "Trẻ em"
+
+msgid "Toddlers"
+msgstr "Trẻ nhỏ"
+
+msgid "个人"
+msgstr "Cá nhân"
+
+msgid "团体"
+msgstr "Nhóm"
+
+msgid "预定桌子"
+msgstr "Đặt bàn"
+
+msgid "个人预定"
+msgstr "Đặt chỗ cá nhân"
+
+msgid "选择"
+msgstr "Chọn"
+
+msgid "团体预定"
+msgstr "Đặt chỗ nhóm"
+
+msgid "时间"
+msgstr "Thời gian"
+
+msgid "餐厅信息"
+msgstr "Thông tin nhà hàng"
+
+msgid "预定"
+msgstr "Đặt chỗ"
+
+msgid "预定成功！"
+msgstr "Đặt chỗ thành công!"
+
+msgid "请填写所有必填字段。"
+msgstr "Vui lòng điền tất cả các trường bắt buộc."

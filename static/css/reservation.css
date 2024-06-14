@@ -1,0 +1,32 @@
+/* reservation.css */
+.language-switcher {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.language-switcher li {
+    margin: 0 10px;
+}
+
+.language-switcher img {
+    width: 30px;
+    height: auto;
+    transition: transform 0.3s;
+}
+
+.language-switcher img:hover {
+    transform: scale(1.2);
+}
+
+.form-container {
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.form-container h2 {
+    margin-bottom: 20px;
+}

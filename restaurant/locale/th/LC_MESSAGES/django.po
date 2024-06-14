@@ -1,0 +1,103 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-06-04 23:08+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: th\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgid "预定日期"
+msgstr "วันที่จอง"
+
+msgid "预定时间"
+msgstr "เวลาจอง"
+
+msgid "预定类型"
+msgstr "ประเภทการจอง"
+
+msgid "姓名"
+msgstr "ชื่อ"
+
+msgid "电话"
+msgstr "โทรศัพท์"
+
+msgid "桌子"
+msgstr "โต๊ะ"
+
+msgid "人数"
+msgstr "จำนวนคน"
+
+msgid "公司名称"
+msgstr "ชื่อบริษัท"
+
+msgid "邮箱"
+msgstr "อีเมล"
+
+msgid "团体餐"
+msgstr "อาหารกลุ่ม"
+
+msgid "自助"
+msgstr "บุฟเฟ่ต์"
+
+msgid "团体餐还是自助"
+msgstr "อาหารกลุ่มหรือบุฟเฟ่ต์"
+
+msgid "Username"
+msgstr "ชื่อผู้ใช้"
+
+msgid "Password"
+msgstr "รหัสผ่าน"
+
+msgid "Password confirmation"
+msgstr "ยืนยันรหัสผ่าน"
+
+msgid "ID to delete"
+msgstr "ID ที่จะลบ"
+
+msgid "Adults"
+msgstr "ผู้ใหญ่"
+
+msgid "Kids"
+msgstr "เด็ก"
+
+msgid "Toddlers"
+msgstr "เด็กเล็ก"
+
+msgid "个人"
+msgstr "ส่วนบุคคล"
+
+msgid "团体"
+msgstr "กลุ่ม"
+
+msgid "预定桌子"
+msgstr "จองโต๊ะ"
+
+msgid "个人预定"
+msgstr "จองส่วนบุคคล"
+
+msgid "选择"
+msgstr "เลือก"
+
+msgid "团体预定"
+msgstr "จองกลุ่ม"
+
+msgid "时间"
+msgstr "เวลา"
+
+msgid "餐厅信息"
+msgstr "ข้อมูลร้านอาหาร"
+
+msgid "预定"
+msgstr "จอง"
+
+msgid "预定成功！"
+msgstr "จองสำเร็จ!"
+
+msgid "请填写所有必填字段。"
+msgstr "กรุณากรอกข้อมูลที่จำเป็นทั้งหมด"
