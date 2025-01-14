@@ -159,7 +159,25 @@
             </ul>
         </div>
         {% endfor %}
-        
+
+        <!-- 自定义饮料表单，独立显示 -->
+        <div class="section custom-drinks">
+            <h3>自定义饮料 / Boissons personnalisées</h3>
+            <form id="custom-drink-form" method="post" class="horizontal-layout">
+                {% csrf_token %}
+                <label for="custom_drink_name">饮料名称 / Nom:</label>
+                <input type="text" id="custom_drink_name" name="custom_drink_name" placeholder="输入饮料名称" required>
+                
+                <label for="custom_drink_price">价格 / Prix:</label>
+                <input type="number" id="custom_drink_price" name="custom_drink_price" step="0.01" placeholder="输入价格" required>
+                
+                <button type="button" class="button" onclick="addCustomDrink()">添加 / Ajouter</button>
+            </form>
+            <ul id="custom-drinks-list">
+                <!-- 自定义饮料会动态添加到这里 -->
+            </ul>
+        </div>
+                
         <div class="section form-section">
             <form method="post" class="horizontal-layout">
                 {% csrf_token %}
@@ -244,6 +262,46 @@
 
             setInterval(displayTime, 1000);
             displayTime();
+
+            let customDrinks = []; // 存储自定义饮料的数组
+
+            function addCustomDrink() {
+                const name = document.getElementById('custom_drink_name').value.trim();
+                const price = parseFloat(document.getElementById('custom_drink_price').value);
+
+                if (name && price > 0) {
+                    // 将自定义饮料添加到数组
+                    customDrinks.push({ name, price });
+
+                    // 动态更新列表
+                    updateCustomDrinksList();
+
+                    // 清空输入框
+                    document.getElementById('custom_drink_name').value = '';
+                    document.getElementById('custom_drink_price').value = '';
+                } else {
+                    alert('请输入有效的名称和价格 / Veuillez entrer un nom et un prix valides.');
+                }
+            }
+
+            function updateCustomDrinksList() {
+                const list = document.getElementById('custom-drinks-list');
+                list.innerHTML = ''; // 清空列表内容
+
+                // 遍历自定义饮料数组，将每个饮料添加到列表中
+                customDrinks.forEach((drink, index) => {
+                    const li = document.createElement('li');
+                    li.textContent = `${drink.name} - ${drink.price.toFixed(2)}€`;
+                    li.innerHTML += ` <button onclick="removeCustomDrink(${index})">删除 / Supprimer</button>`;
+                    list.appendChild(li);
+                });
+            }
+
+            function removeCustomDrink(index) {
+                customDrinks.splice(index, 1); // 从数组中移除对应的饮料
+                updateCustomDrinksList(); // 更新列表显示
+            }
+
         </script>
     </div>
 </body>
