@@ -1,0 +1,125 @@
+{% extends "restaurant/base.html" %}
+{% block content %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/pay.css' %}">
+
+<div class="sales-dashboard">
+    <h2>订单结算 / Règlement des commandes</h2>
+    {% if user.is_superuser %}
+    <div class="pricing-toggle">
+        <button onclick="togglePricing('holiday')">切换为假期价格 / Forcer prix vacances</button>
+        <button onclick="togglePricing('weekday')">切换为平日价格 / Forcer prix en semaine</button>
+    </div>
+    {% endif %}
+    
+    <script>
+    function togglePricing(priceType) {
+        fetch("{% url 'toggle_pricing' %}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({ price_type: priceType })
+        }).then(response => {
+            if (response.ok) {
+                window.location.reload(); // 成功后刷新页面
+            } else {
+                console.error('切换价格失败');
+            }
+        }).catch(error => {
+            console.error('发生错误:', error);
+        });
+    }
+    </script>
+    
+    <div class="summary-panel">
+        <div class="summary-box">
+            <div>Total des commandes / 总订单数</div>
+            <div>{{ total_orders }}</div>
+        </div>
+        <div class="summary-box">
+            <div>Commandes acceptées / 接受的订单</div>
+            <div>{{ accepted_orders }}</div>
+        </div>
+    </div>
+    
+    <table class="orders-table">
+        <thead>
+            <tr>
+                <th>订单号 / Numéro de commande</th>
+                <th>时间 / Heure</th>
+                <th>桌号 / Numéro de table</th>
+                <th>成人 / Adultes</th>
+                <th>小孩 / Enfants</th>
+                <th>幼儿 / Petits enfants</th>
+                <th>饮品详情 / Détails des boissons</th>
+                <th class="total-price">总价 / Prix total</th>
+                <th>用户 / Utilisateur</th> <!-- 新增的列显示用户 -->
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+            <tr style="background-color: {% if order.drinks_order %}#d1e7dd{% else %}#fff{% endif %};">
+                <td>{{ order.id }}</td>
+                <td>{{ order.updated_at|date:"d M Y à H:i" }}</td>
+                    <td>{{ order.table.name }}</td>
+                    <td>{{ order.adults }}</td>
+                    <td>{{ order.kids }}</td>
+                    <td>{{ order.toddlers }}</td>
+                    <td>
+                        {% for item in order.order_item_set.all %}
+                        {% if item.boisson.category %}
+                            {{ item.boisson.name }} x {{ item.quantity }} <br>
+                        {% else %}
+                            自定义饮料: {{ item.boisson.name }} ({{ item.boisson.prix }}€) x {{ item.quantity }} <br>
+                        {% endif %}
+                        {% endfor %}
+                    </td>
+                    
+                    <td class="total-price">{{ order.prix }}</td>
+                    <td>
+                        {% if order.user %}
+                            {{ order.user.username }}
+                        {% else %}
+                            Anonyme / 匿名
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    <script>
+    function delete_item(id){
+        fetch("{% url 'cashier_summary' %}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json', 
+                'X-CSRFToken': '{{ csrf_token }}' // 添加CSRF令牌
+              },
+            body:JSON.stringify({ id_delete: id })
+        }).then(response => {
+            if (response.ok) {
+                // 请求成功，执行重定向
+                window.location.href = "{% url 'cashier_summary' %}";
+            } else {
+                // 请求失败，给出相应的提示或处理其他错误情况
+                console.error('Erreur de requête réseau');
+            }
+        })
+        .catch(error => {
+            // 捕获其他错误
+            console.error('发生错误:', error);
+        });
+    }
+    
+    // 设置每5秒自动刷新页面
+    setInterval(function() {
+        window.location.reload();
+    }, 30000);
+    </script>
+    
+    {% endblock %}
+    
