@@ -654,7 +654,7 @@ def quick_add_coffee(request, table_id):
         messages.error(request, "No active order found to add coffee.")
         return redirect('table_list')
 
-    coffee = Boisson.objects.get(id=7)  # 假设咖啡的ID为7
+    coffee = Boisson.objects.get(id=7)  # 咖啡的ID为7
 
     # 尝试获取现有的咖啡订单项或创建一个新的
     order_item, created = Order_item.objects.get_or_create(
