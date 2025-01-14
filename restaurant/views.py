@@ -12,21 +12,128 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.urls import reverse
+from django.utils import translation
 from django.db.models import Count, Avg, Sum, F, ExpressionWrapper, DurationField
 from django.db.models.functions import TruncDay
 from django.views.decorators.csrf import csrf_exempt
-
-from .models import Table, Order, Order_item, Boisson, Category
-from .forms import New_order_form, login_form, RegisterForm
-
+from django.views.decorators.http import require_POST, require_http_methods
 from django.utils import timezone
-from django.views.decorators.csrf import csrf_exempt, csrf_protect
+from django.utils.translation import gettext_lazy as _
+from django.conf import settings
+
+from .models import Table, Order, Order_item, Boisson, Category, Reservation
+from .forms import New_order_form, login_form, RegisterForm, PersonalReservationForm, GroupReservationForm
 
 # 配置日志
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
-from django.utils import timezone
-from django.views.decorators.http import require_POST
+from django.contrib.auth.decorators import user_passes_test
+
+@csrf_exempt
+@login_required
+@user_passes_test(lambda u: u.is_superuser)
+def toggle_pricing(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        price_type = data.get('price_type')
+        
+        # 根据请求的价格类型更新价格
+        orders = Order.objects.filter(status='Active')  # 获取所有活跃订单
+        for order in orders:
+            adults, kids, toddlers = order.adults, order.kids, order.toddlers
+            
+            # 设置假期和平日的价格
+            holiday_prices = {'adults': 22.8, 'kids': 17.8, 'toddlers': 9.8}
+            weekday_prices = {'adults': 15.8, 'kids': 12.8, 'toddlers': 9.8}
+            
+            if price_type == 'holiday':
+                prices = holiday_prices
+            elif price_type == 'weekday':
+                prices = weekday_prices
+            else:
+                return JsonResponse({'success': False, 'error': 'Invalid price type'})
+            
+            # 更新订单价格
+            order.prix = (
+                prices['adults'] * adults +
+                prices['kids'] * kids +
+                prices['toddlers'] * toddlers
+            )
+            order.save()
+        
+        return JsonResponse({'success': True})
+    return JsonResponse({'success': False, 'error': 'Invalid request method'})
+
+
+def make_reservation(request):
+    user_language = request.GET.get('lang')
+    if user_language:
+        translation.activate(user_language)
+        request.session[settings.LANGUAGE_COOKIE_NAME] = user_language
+
+    reservation_type = request.GET.get('reservation_type')
+
+    if not reservation_type:
+        return render(request, 'restaurant/make_reservation.html', {'user_language': translation.get_language()})
+
+    if request.method == 'POST':
+        if reservation_type == 'group':
+            form = GroupReservationForm(request.POST)
+        else:
+            form = PersonalReservationForm(request.POST)
+
+        if form.is_valid():
+            reservation = form.save(commit=False)
+            reservation.user = request.user
+            reservation.save()
+            messages.success(request, _('预定成功！'))
+            return redirect('reservation_success')
+        else:
+            messages.error(request, _('请填写所有必填字段。'))
+    else:
+        if reservation_type == 'group':
+            form = GroupReservationForm()
+        else:
+            form = PersonalReservationForm()
+        language_code = translation.get_language()
+
+    return render(request, 'restaurant/make_reservation.html', {'form': form, 'user_language': language_code})
+
+@login_required
+def reservation_list(request):
+    reservations = Reservation.objects.filter(user=request.user).order_by('-reservation_date')
+    return render(request, 'restaurant/reservation_list.html', {'reservations': reservations})
+
+
+
+@login_required
+def order_detail(request, order_id):
+    order = get_object_or_404(Order, id=order_id)
+    
+    print(f"Order created_at: {order.created_at}")
+    print(f"Order table: {order.table}")
+    
+    try:
+        reservation = Reservation.objects.filter(table=order.table, reservation_date=order.created_at.date()).first()
+        if reservation:
+            print(f"Reservation found: {reservation}")
+        else:
+            print("No reservation found.")
+    except Reservation.DoesNotExist:
+        reservation = None
+        print("No reservation found for this order.")
+    
+    return render(request, 'restaurant/cashier_summary.html', {
+        'order': order,
+        'reservation': reservation
+    })
+
+
+
+
+def reservation_success(request):
+    return render(request, 'restaurant/reservation_success.html')
 
 def is_superuser(user):
     return user.is_superuser
@@ -115,18 +222,30 @@ def get_pricing(adults, kids, toddlers):
     logging.info(f"Current hour: {current_hour}, Current weekday: {current_weekday}, Current date: {current_date}")
 
     # 设置假期列表
+    # 设置假期列表
     vacance = [
+        timezone.datetime(current_year, 2, 14, tzinfo=pytz.timezone('Europe/Paris')).date(),  # 新增假期
+        timezone.datetime(current_year, 3, 4, tzinfo=pytz.timezone('Europe/Paris')).date(),   # 新增假期
+        timezone.datetime(current_year, 3, 30, tzinfo=pytz.timezone('Europe/Paris')).date(),  # 新增假期
         timezone.datetime(current_year, 4, 1, tzinfo=pytz.timezone('Europe/Paris')).date(),
+        timezone.datetime(current_year, 4, 20, tzinfo=pytz.timezone('Europe/Paris')).date(),  # 新增假期
+        timezone.datetime(current_year, 4, 21, tzinfo=pytz.timezone('Europe/Paris')).date(),  # 新增假期
         timezone.datetime(current_year, 5, 1, tzinfo=pytz.timezone('Europe/Paris')).date(),
         timezone.datetime(current_year, 5, 8, tzinfo=pytz.timezone('Europe/Paris')).date(),
-        timezone.datetime(current_year, 5, 9, tzinfo=pytz.timezone('Europe/Paris')).date(),
-        timezone.datetime(current_year, 5, 20, tzinfo=pytz.timezone('Europe/Paris')).date(),
+        timezone.datetime(current_year, 5, 25, tzinfo=pytz.timezone('Europe/Paris')).date(),  # 新增假期 
+        timezone.datetime(current_year, 5, 29, tzinfo=pytz.timezone('Europe/Paris')).date(),  # 更新到2025年的日期
+        timezone.datetime(current_year, 6, 9, tzinfo=pytz.timezone('Europe/Paris')).date(),  # 更新到2025年的日期
+        timezone.datetime(current_year, 6, 15, tzinfo=pytz.timezone('Europe/Paris')).date(),  # 新增假期
+        timezone.datetime(current_year, 6, 21, tzinfo=pytz.timezone('Europe/Paris')).date(),  # 新增假期
         timezone.datetime(current_year, 7, 14, tzinfo=pytz.timezone('Europe/Paris')).date(),
         timezone.datetime(current_year, 8, 15, tzinfo=pytz.timezone('Europe/Paris')).date(),
+        timezone.datetime(current_year, 10, 26, tzinfo=pytz.timezone('Europe/Paris')).date(),  # 新增假期
         timezone.datetime(current_year, 11, 1, tzinfo=pytz.timezone('Europe/Paris')).date(),
         timezone.datetime(current_year, 11, 11, tzinfo=pytz.timezone('Europe/Paris')).date(),
+        timezone.datetime(current_year, 11, 31, tzinfo=pytz.timezone('Europe/Paris')).date(),  # 新增假期
         timezone.datetime(current_year, 12, 25, tzinfo=pytz.timezone('Europe/Paris')).date(),
     ]
+
 
     # 设置午餐和晚餐的时间段    
     lunch_time = (12, 15)  # 从12点到15点
@@ -260,8 +379,9 @@ def add_order_item(request):
     order_active = Table.objects.get(id=table_id).orders.all().filter(status='Active').first()
     categories = Category.objects.all()
     boissons = Boisson.objects.all()
-    
-    initial_boisson = {} 
+
+    initial_boisson = {}
+
     # 如果表单被提交
     if request.method == 'POST':
         form = New_order_form(request.POST)
@@ -270,6 +390,7 @@ def add_order_item(request):
             toddlers = form.cleaned_data.get('toddlers')
             kids = form.cleaned_data.get('kids')
             prix_boisson = 0
+
             # 更新订单
             if order_active:
                 order_active.adults = adults
@@ -291,13 +412,22 @@ def add_order_item(request):
                     else:
                         order_item = Order_item.objects.filter(order=order_active, boisson=b).first()
                         if order_item:
-                            order_item.delete()  # 正确的删除方法
+                            order_item.delete()
+
+                # 处理自定义饮料
+                custom_drinks = json.loads(request.POST.get('custom_drinks', '[]'))
+                for custom_drink in custom_drinks:
+                    name = custom_drink.get('name')
+                    price = custom_drink.get('price')
+                    if name and price:
+                        custom_boisson = Boisson.objects.create(name=name, prix=Decimal(price), category=None)
+                        Order_item.objects.create(order=order_active, boisson=custom_boisson, quantity=1)
+                        prix_boisson += Decimal(price)
+
                 prix_person = get_pricing(adults, kids, toddlers)
                 order_active.prix = prix_person + float(prix_boisson)
                 order_active.save()
-                # 生成打印数据并发送到打印机
-                # print_data = prepare_print_data(order_active, boissons, boisson_ordered)
-                # send_to_printer(print_data)
+
                 new_form = New_order_form(initial=initial_boisson)
                 return render(request, 'restaurant/add_order_item.html', {
                     'adults': order_active.adults,
@@ -326,13 +456,21 @@ def add_order_item(request):
                     else:
                         b.quantity = 0
                         initial_boisson[f'boisson_{b.id}'] = 0
-                # 生成打印数据并发送到打印机
-                new_boisson_ordered = Order_item.objects.filter(order=new_order).all()
-                print_data = prepare_print_data(new_order, boissons, new_boisson_ordered)
-                send_to_printer(print_data)
+
+                # 处理自定义饮料
+                custom_drinks = json.loads(request.POST.get('custom_drinks', '[]'))
+                for custom_drink in custom_drinks:
+                    name = custom_drink.get('name')
+                    price = custom_drink.get('price')
+                    if name and price:
+                        custom_boisson = Boisson.objects.create(name=name, prix=Decimal(price), category=None)
+                        Order_item.objects.create(order=new_order, boisson=custom_boisson, quantity=1)
+                        prix_boisson += Decimal(price)
+
                 prix_person = get_pricing(adults, kids, toddlers)
                 new_order.prix = prix_person + float(prix_boisson)
                 new_order.save()
+
                 new_form = New_order_form(initial=initial_boisson)
                 return render(request, 'restaurant/add_order_item.html', {
                     'adults': new_order.adults,
@@ -348,6 +486,7 @@ def add_order_item(request):
         # 如果订单存在直接显示
         if order_active:
             boisson_ordered = Order_item.objects.filter(order=order_active).all()
+            custom_drinks = Order_item.objects.filter(order=order_active, boisson__category=None)
             for b in boissons:
                 b.quantity = boisson_ordered.filter(boisson_id=b.id).values_list("quantity", flat=True).first() if boisson_ordered.filter(boisson_id=b.id).exists() else 0
                 initial_boisson[f'boisson_{b.id}'] = b.quantity
@@ -359,7 +498,8 @@ def add_order_item(request):
                 'boissons': boissons,
                 'form': new_form,
                 'categories': categories,
-                'order': order_active
+                'order': order_active,
+                'custom_drinks': custom_drinks
             })
         # 创建新订单表单
         else:
@@ -373,8 +513,10 @@ def add_order_item(request):
                 'boissons': boissons,
                 'form': new_form,
                 'categories': categories,
-                'order': 'null'
+                'order': 'null',
+                'custom_drinks': []
             })
+
 
 
 @login_required(redirect_field_name="login")    
@@ -404,7 +546,6 @@ def cashier_summary(request):
         'accepted_orders': accepted_orders,
         'orders': active_orders  # 确保这个也被传递
     })
-
 
 
 def login_view(request):
