@@ -242,7 +242,6 @@ def get_pricing(adults, kids, toddlers):
         timezone.datetime(current_year, 10, 26, tzinfo=pytz.timezone('Europe/Paris')).date(),  # 新增假期
         timezone.datetime(current_year, 11, 1, tzinfo=pytz.timezone('Europe/Paris')).date(),
         timezone.datetime(current_year, 11, 11, tzinfo=pytz.timezone('Europe/Paris')).date(),
-        timezone.datetime(current_year, 11, 31, tzinfo=pytz.timezone('Europe/Paris')).date(),  # 新增假期
         timezone.datetime(current_year, 12, 25, tzinfo=pytz.timezone('Europe/Paris')).date(),
     ]
 
