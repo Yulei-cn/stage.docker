@@ -7,8 +7,8 @@
     <h2>订单结算 / Règlement des commandes</h2>
     {% if user.is_superuser %}
     <div class="pricing-toggle">
-        <button onclick="togglePricing('holiday')">切换为假期价格 / Forcer prix vacances</button>
-        <button onclick="togglePricing('weekday')">切换为平日价格 / Forcer prix en semaine</button>
+        <button class="centered-button" onclick="togglePricing('holiday')">切换为假期价格 / Forcer prix vacances</button>
+        <button class="centered-button" onclick="togglePricing('weekday')">切换为平日价格 / Forcer prix en semaine</button>
     </div>
     {% endif %}
     
@@ -23,7 +23,7 @@
             body: JSON.stringify({ price_type: priceType })
         }).then(response => {
             if (response.ok) {
-                window.location.reload(); // 成功后刷新页面
+                window.location.reload();
             } else {
                 console.error('切换价格失败');
             }
@@ -44,6 +44,22 @@
         </div>
     </div>
     
+    <div class="button-container">
+        {% if user.is_superuser %}
+        <button class="centered-button" onclick="showCustomConfirm()">结账所有订单</button>
+        {% endif %}
+    </div>
+
+    <div id="customConfirm" class="custom-confirm">
+        <p>Are you sure you want to checkout all orders? This will complete all active orders.</p>
+        <p>Êtes-vous sûr de vouloir clôturer toutes les commandes ? Cela complétera toutes les commandes actives.</p>
+        <p>确定要结账所有订单吗？这将完成所有活跃的订单。</p>
+        <div class="button-container">
+            <button class="centered-button" onclick="checkoutAllOrders()">Confirm</button>
+            <button class="centered-button" onclick="hideCustomConfirm()">Cancel</button>
+        </div>
+    </div>
+
     <table class="orders-table">
         <thead>
             <tr>
@@ -55,7 +71,7 @@
                 <th>幼儿 / Petits enfants</th>
                 <th>饮品详情 / Détails des boissons</th>
                 <th class="total-price">总价 / Prix total</th>
-                <th>用户 / Utilisateur</th> <!-- 新增的列显示用户 -->
+                <th>用户 / Utilisateur</th>
             </tr>
         </thead>
         <tbody>
@@ -63,63 +79,124 @@
             <tr style="background-color: {% if order.drinks_order %}#d1e7dd{% else %}#fff{% endif %};">
                 <td>{{ order.id }}</td>
                 <td>{{ order.updated_at|date:"d M Y à H:i" }}</td>
-                    <td>{{ order.table.name }}</td>
-                    <td>{{ order.adults }}</td>
-                    <td>{{ order.kids }}</td>
-                    <td>{{ order.toddlers }}</td>
-                    <td>
-                        {% for item in order.order_item_set.all %}
-                        {% if item.boisson.category %}
-                            {{ item.boisson.name }} x {{ item.quantity }} <br>
-                        {% else %}
-                            自定义饮料: {{ item.boisson.name }} ({{ item.boisson.prix }}€) x {{ item.quantity }} <br>
-                        {% endif %}
-                        {% endfor %}
-                    </td>
-                    
-                    <td class="total-price">{{ order.prix }}</td>
-                    <td>
-                        {% if order.user %}
-                            {{ order.user.username }}
-                        {% else %}
-                            Anonyme / 匿名
-                        {% endif %}
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-    
-    <script>
+                <td>{{ order.table.name }}</td>
+                <td>{{ order.adults }}</td>
+                <td>{{ order.kids }}</td>
+                <td>{{ order.toddlers }}</td>
+                <td>
+                    {% for item in order.order_item_set.all %}
+                    {% if item.boisson.category %}
+                        {{ item.boisson.name }} x {{ item.quantity }} <br>
+                    {% else %}
+                        自定义饮料: {{ item.boisson.name }} ({{ item.boisson.prix }}€) x {{ item.quantity }} <br>
+                    {% endif %}
+                    {% endfor %}
+                </td>
+                <td class="total-price">{{ order.prix }}</td>
+                <td>
+                    {% if order.user %}
+                        {{ order.user.username }}
+                    {% else %}
+                        Anonyme / 匿名
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script>
     function delete_item(id){
         fetch("{% url 'cashier_summary' %}", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json', 
-                'X-CSRFToken': '{{ csrf_token }}' // 添加CSRF令牌
-              },
-            body:JSON.stringify({ id_delete: id })
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({ id_delete: id })
         }).then(response => {
             if (response.ok) {
-                // 请求成功，执行重定向
                 window.location.href = "{% url 'cashier_summary' %}";
             } else {
-                // 请求失败，给出相应的提示或处理其他错误情况
                 console.error('Erreur de requête réseau');
             }
-        })
-        .catch(error => {
-            // 捕获其他错误
+        }).catch(error => {
             console.error('发生错误:', error);
         });
     }
     
-    // 设置每5秒自动刷新页面
     setInterval(function() {
         window.location.reload();
     }, 30000);
-    </script>
-    
-    {% endblock %}
-    
+
+    function showCustomConfirm() {
+        document.getElementById("customConfirm").style.display = "block";
+    }
+
+    function hideCustomConfirm() {
+        document.getElementById("customConfirm").style.display = "none";
+    }
+
+    {% if user.is_superuser %}
+    function checkoutAllOrders() {
+        fetch('{% url "checkout_all_orders" %}', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert("所有订单已结账");
+                window.location.reload();
+            } else {
+                alert("结账失败");
+            }
+        });
+        hideCustomConfirm();
+    }
+    {% endif %}
+</script>
+
+<style>
+    .button-container {
+        display: flex;
+        justify-content: center;
+        margin: 20px 0;
+    }
+
+    .centered-button {
+        font-size: 18px;
+        padding: 15px 30px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .centered-button:hover {
+        background-color: #45a049;
+    }
+
+    .custom-confirm {
+        display: none;
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        border: 1px solid black;
+        background-color: white;
+        padding: 20px;
+        z-index: 100;
+    }
+
+    .custom-confirm p {
+        text-align: center;
+        font-weight: bold;
+    }
+</style>
+{% endblock %}
