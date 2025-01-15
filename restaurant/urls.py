@@ -22,4 +22,5 @@ urlpatterns = [
     path('table/<int:table_id>/quick_add_coffee/', views.quick_add_coffee, name='quick_add_coffee'),
     path('sales-overview/', views.sales_overview, name='sales-overview'),
     path('print_order/', views.print_order, name='print_order'),
+    path('toggle_pricing/', views.toggle_pricing, name='toggle_pricing'), #新增价格切换
 ]
