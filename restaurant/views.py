@@ -371,16 +371,15 @@ def base(request):
 def table_detail(request, table_id):
     pass
 
-@login_required(redirect_field_name="login")
+#@login_required(redirect_field_name="login")
 def add_order_item(request):
     table_id = request.GET.get('table_id')
-    table_this = Table.objects.get(id=table_id)
-    order_active = Table.objects.get(id=table_id).orders.all().filter(status='Active').first()
+    table_this = get_object_or_404(Table, id=table_id)
+    order_active = table_this.orders.filter(status='Active').first()
     categories = Category.objects.all()
     boissons = Boisson.objects.all()
-
-    initial_boisson = {}
-
+    
+    initial_boisson = {} 
     # 如果表单被提交
     if request.method == 'POST':
         form = New_order_form(request.POST)
@@ -389,13 +388,11 @@ def add_order_item(request):
             toddlers = form.cleaned_data.get('toddlers')
             kids = form.cleaned_data.get('kids')
             prix_boisson = 0
-
             # 更新订单
             if order_active:
                 order_active.adults = adults
                 order_active.kids = kids
                 order_active.toddlers = toddlers
-                order_active.user = request.user
                 order_active.save()
                 messages.success(request, 'Commande mise à jour avec succès。')
                 boisson_ordered = Order_item.objects.filter(order=order_active).all()
@@ -412,21 +409,9 @@ def add_order_item(request):
                         order_item = Order_item.objects.filter(order=order_active, boisson=b).first()
                         if order_item:
                             order_item.delete()
-
-                # 处理自定义饮料
-                custom_drinks = json.loads(request.POST.get('custom_drinks', '[]'))
-                for custom_drink in custom_drinks:
-                    name = custom_drink.get('name')
-                    price = custom_drink.get('price')
-                    if name and price:
-                        custom_boisson = Boisson.objects.create(name=name, prix=Decimal(price), category=None)
-                        Order_item.objects.create(order=order_active, boisson=custom_boisson, quantity=1)
-                        prix_boisson += Decimal(price)
-
                 prix_person = get_pricing(adults, kids, toddlers)
                 order_active.prix = prix_person + float(prix_boisson)
                 order_active.save()
-
                 new_form = New_order_form(initial=initial_boisson)
                 return render(request, 'restaurant/add_order_item.html', {
                     'adults': order_active.adults,
@@ -440,7 +425,10 @@ def add_order_item(request):
             # 创建订单
             else:
                 new_order = Order(adults=adults, kids=kids, toddlers=toddlers, table=table_this, created_at=timezone.now())
-                new_order.user = request.user
+                if request.user.is_authenticated:
+                    new_order.user = request.user
+                else:
+                    new_order.user = None  # 或者设置为默认用户
                 new_order.save()
                 messages.success(request, 'La nouvelle commande a été créée avec succès。')
 
@@ -455,21 +443,10 @@ def add_order_item(request):
                     else:
                         b.quantity = 0
                         initial_boisson[f'boisson_{b.id}'] = 0
-
-                # 处理自定义饮料
-                custom_drinks = json.loads(request.POST.get('custom_drinks', '[]'))
-                for custom_drink in custom_drinks:
-                    name = custom_drink.get('name')
-                    price = custom_drink.get('price')
-                    if name and price:
-                        custom_boisson = Boisson.objects.create(name=name, prix=Decimal(price), category=None)
-                        Order_item.objects.create(order=new_order, boisson=custom_boisson, quantity=1)
-                        prix_boisson += Decimal(price)
-
+                new_boisson_ordered = Order_item.objects.filter(order=new_order).all()
                 prix_person = get_pricing(adults, kids, toddlers)
                 new_order.prix = prix_person + float(prix_boisson)
                 new_order.save()
-
                 new_form = New_order_form(initial=initial_boisson)
                 return render(request, 'restaurant/add_order_item.html', {
                     'adults': new_order.adults,
@@ -482,10 +459,8 @@ def add_order_item(request):
                 })
     # 渲染页面
     else:
-        # 如果订单存在直接显示
         if order_active:
             boisson_ordered = Order_item.objects.filter(order=order_active).all()
-            custom_drinks = Order_item.objects.filter(order=order_active, boisson__category=None)
             for b in boissons:
                 b.quantity = boisson_ordered.filter(boisson_id=b.id).values_list("quantity", flat=True).first() if boisson_ordered.filter(boisson_id=b.id).exists() else 0
                 initial_boisson[f'boisson_{b.id}'] = b.quantity
@@ -497,10 +472,8 @@ def add_order_item(request):
                 'boissons': boissons,
                 'form': new_form,
                 'categories': categories,
-                'order': order_active,
-                'custom_drinks': custom_drinks
+                'order': order_active
             })
-        # 创建新订单表单
         else:
             for b in boissons:
                 b.quantity = 0
@@ -512,10 +485,8 @@ def add_order_item(request):
                 'boissons': boissons,
                 'form': new_form,
                 'categories': categories,
-                'order': 'null',
-                'custom_drinks': []
+                'order': 'null'
             })
-
 
 
 @login_required(redirect_field_name="login")    
