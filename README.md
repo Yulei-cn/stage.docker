@@ -1,3 +1,4 @@
+```markdown
 Highlights of Technologies Used:
 Google Cloud Platform: Google Cloud Run, Google Cloud SQL, Google Cloud Storage.
 Docker: Containerized deployment for easy scalability and reproducibility.
@@ -5,7 +6,7 @@ Stripe: Payment gateway integration for secure and efficient transactions.
 Ngrok: Tunneling for real-time development and testing.
 Alibaba Cloud: Deployed services for multi-location scalability and reliability.
 
-```markdown
+
 # 饮料点餐系统
 
 这是一个基于Django开发的饮料点餐管理系统，旨在提高点餐效率并简化管理操作。
