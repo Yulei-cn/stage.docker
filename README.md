@@ -1,4 +1,9 @@
-以下是一个简单的README.md文件模板，包含了您提到的版本更新内容：
+Highlights of Technologies Used:
+Google Cloud Platform: Google Cloud Run, Google Cloud SQL, Google Cloud Storage.
+Docker: Containerized deployment for easy scalability and reproducibility.
+Stripe: Payment gateway integration for secure and efficient transactions.
+Ngrok: Tunneling for real-time development and testing.
+Alibaba Cloud: Deployed services for multi-location scalability and reliability.
 
 ```markdown
 # 饮料点餐系统
